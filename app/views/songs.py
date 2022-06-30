@@ -96,8 +96,20 @@ def single_song(request, song_id):
     if request.method == "PUT":
         try:
             song_name = request.data["song_name"]
+            album_name = request.data["album_name"]
+            artist_name = request.data["artist_name"]
+            genre_name = request.data["genre_name"]
+
+            genre, created = Genre.objects.get_or_create(genre_name=genre_name)
+            artist, created = Artist.objects.get_or_create(artist_name=artist_name)
+            album, created = Album.objects.get_or_create(
+                album_name=album_name, artist_id=artist
+            )
             song.song_name = song_name
+            song.genre_id = genre
+            song.album_id = album
             song.save()
+
             serializer = SongSerializer(song, many=False)
             content = {
                 "status": "success",
