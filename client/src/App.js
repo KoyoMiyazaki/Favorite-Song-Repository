@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { styled, Box } from "@mui/material";
 import Home from "./pages/Home";
 import "./App.css";
+import SingleSong from "./pages/SingleSong";
 
 const StyledBox = styled(Box)({
   maxWidth: "720px",
@@ -14,6 +15,7 @@ function App() {
     <StyledBox>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="songs/:songId" element={<SingleSong />} />
       </Routes>
     </StyledBox>
   );

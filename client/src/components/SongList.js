@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Box,
   IconButton,
@@ -12,7 +13,6 @@ import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
-  //   textAlign: "center",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
@@ -35,7 +35,11 @@ const SongList = ({ songs, getAllSongs }) => {
             {song.song_name} / {song.album_id.album_name}
           </Typography>
           <Stack direction="row">
-            <IconButton aria-label="edit">
+            <IconButton
+              aria-label="edit"
+              component={Link}
+              to={`/songs/${song.song_id}`}
+            >
               <Edit color="info" />
             </IconButton>
             <IconButton
