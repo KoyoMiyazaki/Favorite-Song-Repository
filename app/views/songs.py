@@ -2,7 +2,7 @@ from django.db.utils import IntegrityError
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from ..models import Album, Genre, Song
+from ..models import Album, Artist, Genre, Song
 from ..serializers import SongSerializer
 
 
@@ -10,7 +10,7 @@ from ..serializers import SongSerializer
 def songs(request):
     if request.method == "GET":
         try:
-            songs = Song.objects.all()
+            songs = Song.objects.select_related("album_id", "genre_id")
             serializer = SongSerializer(songs, many=True)
             content = {
                 "status": "success",
@@ -29,13 +29,18 @@ def songs(request):
         try:
             song_name = request.data["song_name"]
             album_name = request.data["album_name"]
+            artist_name = request.data["artist_name"]
             genre_name = request.data["genre_name"]
-            album = Album.objects.get(album_name=album_name)
-            genre = Genre.objects.get(genre_name=genre_name)
 
+            genre, created = Genre.objects.get_or_create(genre_name=genre_name)
+            artist, created = Artist.objects.get_or_create(artist_name=artist_name)
+            album, created = Album.objects.get_or_create(
+                album_name=album_name, artist_id=artist
+            )
             song = Song.objects.create(
                 song_name=song_name, album_id=album, genre_id=genre
             )
+
             serializer = SongSerializer(song, many=False)
             content = {
                 "status": "success",
