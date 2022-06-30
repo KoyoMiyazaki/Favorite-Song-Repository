@@ -18,8 +18,6 @@ const Home = () => {
     getAllSongs();
   }, []);
 
-  console.log(getAllSongs);
-
   return (
     <Stack direction="column" spacing={3}>
       <Box>
@@ -28,7 +26,7 @@ const Home = () => {
       </Box>
       <Box>
         <Title title="Song List" />
-        <SongList songs={songs} />
+        <SongList songs={songs} getAllSongs={() => getAllSongs()} />
       </Box>
     </Stack>
   );
