@@ -10,7 +10,9 @@ from ..serializers import SongSerializer
 def songs(request):
     if request.method == "GET":
         try:
-            songs = Song.objects.select_related("album_id", "genre_id")
+            songs = Song.objects.select_related("album_id", "genre_id").order_by(
+                "-updated_at", "song_name"
+            )
             serializer = SongSerializer(songs, many=True)
             content = {
                 "status": "success",

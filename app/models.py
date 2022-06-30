@@ -64,6 +64,7 @@ class Song(models.Model):
     genre_id = models.ForeignKey(
         Genre, on_delete=models.DO_NOTHING, null=True, db_column="genre_id"
     )
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "song"
