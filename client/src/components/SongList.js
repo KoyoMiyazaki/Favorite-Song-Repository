@@ -6,6 +6,7 @@ import {
   Paper,
   Stack,
   styled,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
@@ -35,19 +36,23 @@ const SongList = ({ songs, getAllSongs }) => {
             {song.song_name} / {song.album_id.album_name}
           </Typography>
           <Stack direction="row">
-            <IconButton
-              aria-label="edit"
-              component={Link}
-              to={`/songs/${song.song_id}`}
-            >
-              <Edit color="info" />
-            </IconButton>
-            <IconButton
-              aria-label="delete"
-              onClick={() => deleteSong(song.song_id)}
-            >
-              <Delete color="error" />
-            </IconButton>
+            <Tooltip title="Edit This Song">
+              <IconButton
+                aria-label="edit"
+                component={Link}
+                to={`/songs/${song.song_id}`}
+              >
+                <Edit color="info" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete This Song">
+              <IconButton
+                aria-label="delete"
+                onClick={() => deleteSong(song.song_id)}
+              >
+                <Delete color="error" />
+              </IconButton>
+            </Tooltip>
           </Stack>
         </Item>
       ))}
