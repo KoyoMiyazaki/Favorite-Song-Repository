@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
   IconButton,
   Paper,
   Stack,
@@ -23,9 +27,23 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const SongList = ({ songs, getAllSongs }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [willDeleteSongId, setWillDeleteSongId] = useState(null);
+
   const deleteSong = async (songId) => {
     await axios.delete(`http://localhost:8000/songs/${songId}`);
+    setWillDeleteSongId(null);
+    setIsDialogOpen(false);
     getAllSongs();
+  };
+
+  const handleDialogOpen = (songId) => {
+    setWillDeleteSongId(songId);
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
   };
 
   return (
@@ -48,7 +66,7 @@ const SongList = ({ songs, getAllSongs }) => {
             <Tooltip title="Delete This Song">
               <IconButton
                 aria-label="delete"
-                onClick={() => deleteSong(song.song_id)}
+                onClick={() => handleDialogOpen(song.song_id)}
               >
                 <Delete color="error" />
               </IconButton>
@@ -56,6 +74,26 @@ const SongList = ({ songs, getAllSongs }) => {
           </Stack>
         </Item>
       ))}
+
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {`Are you sure to delete "${
+            willDeleteSongId &&
+            songs.find((song) => song.song_id === willDeleteSongId).song_name
+          }" ?`}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Back</Button>
+          <Button onClick={() => deleteSong(willDeleteSongId)} autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
