@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   Accordion,
   AccordionDetails,
@@ -6,31 +7,36 @@ import {
   Box,
   Grid,
   Pagination,
-  Stack,
-  styled,
 } from "@mui/material";
-import axios from "axios";
+import { ExpandMore } from "@mui/icons-material";
+import axios, { AxiosError } from "axios";
 import Title from "../components/Title";
 import SongList from "../components/SongList";
 import RegisterSong from "../components/RegisterSong";
-import { ExpandMore } from "@mui/icons-material";
-
-const GridItem = styled(Grid)({
-  "& .css-1vbpcsy-MuiGrid-root>.MuiGrid-item": {
-    padding: "0rem",
-  },
-});
+import { setToast } from "../slices/toastSlice";
 
 const Home = () => {
   const [songs, setSongs] = useState([]);
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(0);
+  const dispatch = useDispatch();
 
   const getAllSongs = async () => {
-    const res = await axios.get(`http://localhost:8000/songs?page=${page}`);
-    const data = await res.data;
-    setNumPages(parseInt(data.numPages, 10));
-    setSongs(data.data.getAllSongs);
+    try {
+      const res = await axios.get(`http://localhost:8000/songs?page=${page}`);
+      const data = await res.data;
+      setNumPages(parseInt(data.numPages, 10));
+      setSongs(data.data.getAllSongs);
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        dispatch(
+          setToast({
+            message: "Network Error... Please try again later!",
+            severity: "error",
+          })
+        );
+      }
+    }
   };
 
   useEffect(() => {
@@ -63,7 +69,7 @@ const Home = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-      <Grid item>
+      <Grid item paddingX="1rem">
         <Title title="Song List" />
         <SongList songs={songs} getAllSongs={() => getAllSongs()} />
         <Box

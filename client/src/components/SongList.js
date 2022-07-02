@@ -15,8 +15,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
-import axios from "axios";
-import { setOpen, setMessage } from "../slices/toastSlice";
+import axios, { AxiosError } from "axios";
+import { setToast } from "../slices/toastSlice";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -34,12 +34,27 @@ const SongList = ({ songs, getAllSongs }) => {
   const dispatch = useDispatch();
 
   const deleteSong = async (songId) => {
-    await axios.delete(`http://localhost:8000/songs/${songId}`);
-    setWillDeleteSongId(null);
-    setIsDialogOpen(false);
-    dispatch(setMessage("Deleted!"));
-    dispatch(setOpen());
-    getAllSongs();
+    try {
+      setIsDialogOpen(false);
+      setWillDeleteSongId(null);
+      await axios.delete(`http://localhost:8000/songs/${songId}`);
+      dispatch(
+        setToast({
+          message: "Deleted!",
+          severity: "success",
+        })
+      );
+      getAllSongs();
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        dispatch(
+          setToast({
+            message: "Network Error... Please try again later!",
+            severity: "error",
+          })
+        );
+      }
+    }
   };
 
   const handleDialogOpen = (songId) => {

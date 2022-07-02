@@ -11,8 +11,8 @@ import {
   Tooltip,
 } from "@mui/material";
 import { ArrowBackIos } from "@mui/icons-material";
-import axios from "axios";
-import { setOpen, setMessage } from "../slices/toastSlice";
+import axios, { AxiosError } from "axios";
+import { setToast } from "../slices/toastSlice";
 import Title from "../components/Title";
 
 const StyledTextField = styled(TextField)({
@@ -32,15 +32,26 @@ const SingleSong = () => {
 
   useEffect(() => {
     const getSingSong = async (songId) => {
-      const res = await axios.get(`http://localhost:8000/songs/${songId}`);
-      const data = await res.data;
-      const { song_name, album_id, genre_id } = await data.data.getSingleSong;
-      setInputValues({
-        songName: song_name,
-        albumName: album_id.album_name,
-        artistName: album_id.artist_id.artist_name,
-        genreName: genre_id.genre_name,
-      });
+      try {
+        const res = await axios.get(`http://localhost:8000/songs/${songId}`);
+        const data = await res.data;
+        const { song_name, album_id, genre_id } = await data.data.getSingleSong;
+        setInputValues({
+          songName: song_name,
+          albumName: album_id.album_name,
+          artistName: album_id.artist_id.artist_name,
+          genreName: genre_id.genre_name,
+        });
+      } catch (e) {
+        if (e instanceof AxiosError) {
+          dispatch(
+            setToast({
+              message: "Network Error... Please try again later!",
+              severity: "error",
+            })
+          );
+        }
+      }
     };
     getSingSong(songId);
   }, []);
@@ -56,15 +67,30 @@ const SingleSong = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.put(`http://localhost:8000/songs/${songId}`, {
-      song_name: inputValues.songName,
-      album_name: inputValues.albumName,
-      artist_name: inputValues.artistName,
-      genre_name: inputValues.genreName,
-    });
-    dispatch(setMessage("Updated!"));
-    dispatch(setOpen());
-    navigate("/");
+    try {
+      await axios.put(`http://localhost:8000/songs/${songId}`, {
+        song_name: inputValues.songName,
+        album_name: inputValues.albumName,
+        artist_name: inputValues.artistName,
+        genre_name: inputValues.genreName,
+      });
+      dispatch(
+        setToast({
+          message: "Updated!",
+          severity: "success",
+        })
+      );
+      navigate("/");
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        dispatch(
+          setToast({
+            message: "Network Error... Please try again later!",
+            severity: "error",
+          })
+        );
+      }
+    }
   };
 
   return (
