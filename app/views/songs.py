@@ -1,4 +1,5 @@
 from django.db.utils import IntegrityError
+from django.core.paginator import Paginator
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -13,10 +14,15 @@ def songs(request):
             songs = Song.objects.select_related("album_id", "genre_id").order_by(
                 "-updated_at", "song_name"
             )
-            serializer = SongSerializer(songs, many=True)
+            paginator = Paginator(songs, 5)
+            page_number = request.GET.get("page")
+            paginated_songs = paginator.get_page(page_number)
+
+            serializer = SongSerializer(paginated_songs, many=True)
             content = {
                 "status": "success",
                 "data": {"getAllSongs": serializer.data},
+                "numPages": paginator.num_pages,
             }
             return Response(content, status=status.HTTP_200_OK)
 
