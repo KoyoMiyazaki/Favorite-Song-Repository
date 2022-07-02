@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Button, Stack, styled, TextField } from "@mui/material";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setOpen, setMessage } from "../slices/toastSlice";
 
 const StyledTextField = styled(TextField)({
   width: "100%",
@@ -13,6 +15,7 @@ const RegisterSong = ({ getAllSongs }) => {
     artistName: "",
     genreName: "",
   });
+  const dispatch = useDispatch();
 
   const handleInput = (e) => {
     setInputValues((prev) => {
@@ -37,6 +40,8 @@ const RegisterSong = ({ getAllSongs }) => {
       artistName: "",
       genreName: "",
     });
+    dispatch(setMessage("Registered!"));
+    dispatch(setOpen());
     getAllSongs();
   };
 

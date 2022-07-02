@@ -1,4 +1,6 @@
-import { ArrowBackIos } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   Button,
   IconButton,
@@ -7,9 +9,9 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
+import { ArrowBackIos } from "@mui/icons-material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { setOpen, setMessage } from "../slices/toastSlice";
 import Title from "../components/Title";
 
 const StyledTextField = styled(TextField)({
@@ -24,6 +26,7 @@ const SingleSong = () => {
     genreName: "",
   });
   const { songId } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,6 +61,8 @@ const SingleSong = () => {
       artist_name: inputValues.artistName,
       genre_name: inputValues.genreName,
     });
+    dispatch(setMessage("Updated!"));
+    dispatch(setOpen());
     navigate("/");
   };
 

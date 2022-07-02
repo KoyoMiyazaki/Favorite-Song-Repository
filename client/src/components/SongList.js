@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   Box,
   Button,
@@ -15,6 +16,7 @@ import {
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import axios from "axios";
+import { setOpen, setMessage } from "../slices/toastSlice";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -29,11 +31,14 @@ const Item = styled(Paper)(({ theme }) => ({
 const SongList = ({ songs, getAllSongs }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [willDeleteSongId, setWillDeleteSongId] = useState(null);
+  const dispatch = useDispatch();
 
   const deleteSong = async (songId) => {
     await axios.delete(`http://localhost:8000/songs/${songId}`);
     setWillDeleteSongId(null);
     setIsDialogOpen(false);
+    dispatch(setMessage("Deleted!"));
+    dispatch(setOpen());
     getAllSongs();
   };
 
