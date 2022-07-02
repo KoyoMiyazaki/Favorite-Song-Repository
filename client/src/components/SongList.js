@@ -55,9 +55,14 @@ const SongList = ({ songs, getAllSongs }) => {
     <Box>
       {songs.map((song) => (
         <Item key={song.song_id} elevation={4}>
-          <Typography variant="h6" component="p">
-            {song.song_name} / {song.album_id.album_name}
-          </Typography>
+          <Stack direction="column">
+            <Typography variant="h6" component="p">
+              {song.song_name} / {song.album_id.album_name}
+            </Typography>
+            <Typography variant="body1" component="p">
+              {song.album_id.artist_id.artist_name}
+            </Typography>
+          </Stack>
           <Stack direction="row">
             <Tooltip title="Edit This Song">
               <IconButton

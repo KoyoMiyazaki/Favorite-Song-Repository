@@ -6,8 +6,7 @@ import Toast from "./components/Toast";
 import "./App.css";
 
 const StyledBox = styled(Box)({
-  maxWidth: "720px",
-  margin: "0 auto",
+  width: "100%",
   padding: "2rem",
 });
 

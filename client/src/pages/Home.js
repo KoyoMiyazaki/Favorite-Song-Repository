@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Box, Pagination, Stack } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Grid,
+  Pagination,
+  Stack,
+  styled,
+} from "@mui/material";
 import axios from "axios";
 import Title from "../components/Title";
 import SongList from "../components/SongList";
 import RegisterSong from "../components/RegisterSong";
+import { ExpandMore } from "@mui/icons-material";
+
+const GridItem = styled(Grid)({
+  "& .css-1vbpcsy-MuiGrid-root>.MuiGrid-item": {
+    padding: "0rem",
+  },
+});
 
 const Home = () => {
   const [songs, setSongs] = useState([]);
@@ -26,12 +42,28 @@ const Home = () => {
   };
 
   return (
-    <Stack direction="column" spacing={3}>
-      <Box>
-        <Title title="Register Song" />
-        <RegisterSong getAllSongs={() => getAllSongs()} />
-      </Box>
-      <Box>
+    <Grid
+      container
+      rowSpacing={3}
+      direction={{ xs: "column" }}
+      sx={{ maxWidth: "960px", width: "100%", margin: "0 auto" }}
+      justifyContent="center"
+    >
+      <Grid item>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Title title="Register Song" />
+          </AccordionSummary>
+          <AccordionDetails>
+            <RegisterSong getAllSongs={() => getAllSongs()} />
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
+      <Grid item>
         <Title title="Song List" />
         <SongList songs={songs} getAllSongs={() => getAllSongs()} />
         <Box
@@ -44,8 +76,8 @@ const Home = () => {
             size="large"
           />
         </Box>
-      </Box>
-    </Stack>
+      </Grid>
+    </Grid>
   );
 };
 

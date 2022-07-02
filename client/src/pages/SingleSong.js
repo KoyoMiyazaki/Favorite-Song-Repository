@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
+  Box,
   Button,
   IconButton,
   Stack,
@@ -67,7 +68,7 @@ const SingleSong = () => {
   };
 
   return (
-    <>
+    <Box sx={{ maxWidth: "960px", width: "100%", margin: "0 auto" }}>
       <Tooltip title="To Home Page">
         <IconButton
           aria-label="back"
@@ -126,7 +127,7 @@ const SingleSong = () => {
           </Button>
         </Stack>
       </form>
-    </>
+    </Box>
   );
 };
 
