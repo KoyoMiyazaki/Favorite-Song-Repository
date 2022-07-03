@@ -83,12 +83,19 @@ const SingleSong = () => {
       navigate("/");
     } catch (e) {
       if (e instanceof AxiosError) {
-        dispatch(
-          setToast({
-            message: "Network Error... Please try again later!",
-            severity: "error",
-          })
-        );
+        e.response.data
+          ? dispatch(
+              setToast({
+                message: e.response.data.message,
+                severity: "error",
+              })
+            )
+          : dispatch(
+              setToast({
+                message: "Network Error... Please try again later!",
+                severity: "error",
+              })
+            );
       }
     }
   };

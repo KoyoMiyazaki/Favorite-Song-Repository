@@ -29,27 +29,44 @@ const RegisterSong = ({ getAllSongs }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/songs/", {
+      const result = await axios.post("http://localhost:8000/songs/", {
         song_name: inputValues.songName,
         album_name: inputValues.albumName,
         artist_name: inputValues.artistName,
         genre_name: inputValues.genreName,
       });
-      dispatch(
-        setToast({
-          message: "Registered!",
-          severity: "success",
-        })
-      );
-      getAllSongs();
-    } catch (e) {
-      if (e instanceof AxiosError) {
+      const data = await result.data;
+      if (data.status !== "success") {
         dispatch(
           setToast({
-            message: "Network Error... Please try again later!",
+            message: data.message,
             severity: "error",
           })
         );
+      } else {
+        dispatch(
+          setToast({
+            message: "Registered!",
+            severity: "success",
+          })
+        );
+      }
+      getAllSongs();
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        e.response.data
+          ? dispatch(
+              setToast({
+                message: e.response.data.message,
+                severity: "error",
+              })
+            )
+          : dispatch(
+              setToast({
+                message: "Network Error... Please try again later!",
+                severity: "error",
+              })
+            );
       }
     }
     setInputValues({

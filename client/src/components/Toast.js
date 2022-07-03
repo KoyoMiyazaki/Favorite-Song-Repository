@@ -12,7 +12,7 @@ const Toast = () => {
   return (
     <Snackbar
       open={isToastOpen}
-      autoHideDuration={4000}
+      autoHideDuration={6000}
       onClose={() => dispatch(closeToast())}
     >
       <Alert severity={toastSeverity} sx={{ width: "100%" }}>
