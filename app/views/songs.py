@@ -1,5 +1,6 @@
 from django.db.utils import IntegrityError
 from django.core.paginator import Paginator
+from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -36,9 +37,15 @@ def songs(request):
     if request.method == "POST":
         try:
             song_name = request.data["song_name"]
-            album_name = request.data["album_name"]
-            artist_name = request.data["artist_name"]
-            genre_name = request.data["genre_name"]
+            album_name = (
+                request.data["album_name"] if "album_name" in request.data else ""
+            )
+            artist_name = (
+                request.data["artist_name"] if "artist_name" in request.data else ""
+            )
+            genre_name = (
+                request.data["genre_name"] if "genre_name" in request.data else ""
+            )
 
             genre, created = Genre.objects.get_or_create(genre_name=genre_name)
             artist, created = Artist.objects.get_or_create(artist_name=artist_name)
@@ -58,21 +65,21 @@ def songs(request):
         except KeyError:
             content = {
                 "status": "fail",
-                "message": "song_name must be required",
+                "message": "song name must be required",
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except IntegrityError:
-            content = {
-                "status": "fail",
-                "message": f"A pair of song_name: {song_name} and album_name: {album_name} is already exist",
-            }
+            if len(song_name) < 1:
+                content = {
+                    "status": "fail",
+                    "message": "song name must be 1 or more character",
+                }
+            else:
+                content = {
+                    "status": "fail",
+                    "message": f"A pair of song name: {song_name} and album name: {album_name} is already exist",
+                }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        # except Album.DoesNotExist:
-        #     content = {
-        #         "status": "fail",
-        #         "message": f"album_name: {album_name} is not found",
-        #     }
-        #     return Response(content, status=status.HTTP_404_NOT_FOUND)
         except Exception:
             content = {
                 "status": "error",
@@ -89,7 +96,7 @@ def single_song(request, song_id):
     except Song.DoesNotExist:
         content = {
             "status": "fail",
-            "message": f"song_id: {song_id} is not found",
+            "message": f"song id: {song_id} is not found",
         }
         return Response(content, status=status.HTTP_404_NOT_FOUND)
 
@@ -127,13 +134,13 @@ def single_song(request, song_id):
         except KeyError:
             content = {
                 "status": "fail",
-                "message": "song_name must be required",
+                "message": "song name must be required",
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except IntegrityError:
             content = {
                 "status": "fail",
-                "message": f"song_name: {song_name} is already exist",
+                "message": f"song name: {song_name} is already exist",
             }
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except Exception:

@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.functions import Length
+
+models.CharField.register_lookup(Length)
 
 
 class Genre(models.Model):
@@ -28,7 +31,7 @@ class Artist(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["artist_name"], name="artist_unique_constraint"
-            )
+            ),
         ]
 
     def __str__(self):
@@ -57,7 +60,11 @@ class Album(models.Model):
 
 class Song(models.Model):
     song_id = models.AutoField(primary_key=True)
-    song_name = models.CharField(max_length=255, null=False, blank=False)
+    song_name = models.CharField(
+        max_length=255,
+        null=False,
+        blank=False,
+    )
     album_id = models.ForeignKey(
         Album, on_delete=models.DO_NOTHING, null=True, db_column="album_id"
     )
@@ -72,7 +79,11 @@ class Song(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["song_name", "album_id"], name="song_unique_constraint"
-            )
+            ),
+            models.CheckConstraint(
+                check=models.Q(song_name__length__gt=0),
+                name="song_check_constraint",
+            ),
         ]
 
     def __str__(self):
