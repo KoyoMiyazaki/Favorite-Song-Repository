@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isOpen: false,
   message: "",
-  severity: "",
+  severity: "success",
 };
 
 export const toastSlice = createSlice({
