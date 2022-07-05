@@ -61,6 +61,7 @@ const Home = () => {
             expandIcon={<ExpandMore />}
             aria-controls="panel1a-content"
             id="panel1a-header"
+            name="accordion-header"
           >
             <Title title="Register Song" />
           </AccordionSummary>

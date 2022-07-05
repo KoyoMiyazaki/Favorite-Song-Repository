@@ -6,7 +6,6 @@ describe("Title Component", () => {
     const title = "test";
     render(<Title title={title} />);
     const titleElement = await screen.findByText(new RegExp(title, "i"));
-    // screen.debug();
     expect(titleElement).toBeInTheDocument();
   });
 });

@@ -1,30 +1,31 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import { setup } from "@testing-library/user-event";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 import { store } from "../stores";
-import RegisterSong from "./RegisterSong";
+import SingleSong from "./SingleSong";
 
-const getAllSongs = () => {};
-
-const WrappedRegisterSong = () => {
+const WrappedSingleSong = () => {
   return (
     <Provider store={store}>
-      <RegisterSong getAllSongs={getAllSongs} />
+      <BrowserRouter>
+        <SingleSong />
+      </BrowserRouter>
     </Provider>
   );
 };
 
 afterEach(() => cleanup());
 
-describe("RegisterSong Component", () => {
-  test("RegisterSong should render", async () => {
+describe("SingleSong Component", () => {
+  test("SingleSong should render", async () => {
     const inputLabels = [
       "Song Name",
       "Album Name",
       "Artist Name",
       "Genre Name",
     ];
-
-    render(<WrappedRegisterSong />);
+    render(<WrappedSingleSong />);
     inputLabels.forEach((label) => {
       const labelElement = screen.getByLabelText(new RegExp(label, "i"));
       expect(labelElement).toBeInTheDocument();
@@ -38,6 +39,9 @@ describe("RegisterSong Component", () => {
 
     const buttonElement = await screen.findByRole("button");
     expect(buttonElement).toBeInTheDocument();
-    expect(buttonElement.textContent).toMatch(/REGISTER/i);
+    expect(buttonElement.textContent).toMatch(/UPDATE/i);
+
+    const backLinkElement = await screen.findByRole("link");
+    expect(backLinkElement).toBeInTheDocument();
   });
 });

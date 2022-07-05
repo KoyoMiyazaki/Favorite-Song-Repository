@@ -45,7 +45,6 @@ describe("SongList Component", () => {
     const songAndAlbumElement = await screen.findByText(
       new RegExp(songAndAlbum, "i")
     );
-    // screen.debug();
     expect(songAndAlbumElement).toBeInTheDocument();
 
     const artist = songs[0].album_id.artist_id.artist_name;
