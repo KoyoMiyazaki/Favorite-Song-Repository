@@ -3,7 +3,6 @@ import { styled, Typography } from "@mui/material";
 
 const StyledTypography = styled(Typography)({
   fontWeight: 500,
-  marginBottom: "0.5rem",
 });
 
 const Title = ({ title }) => {

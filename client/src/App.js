@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { styled, Box } from "@mui/material";
 import Home from "./pages/Home";
 import SingleSong from "./pages/SingleSong";
+import SearchResult from "./pages/SearchResult";
 import Toast from "./components/Toast";
 import "./App.css";
 
@@ -15,6 +16,7 @@ function App() {
     <StyledBox>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="search/" element={<SearchResult />} />
         <Route path="songs/:songId" element={<SingleSong />} />
       </Routes>
 
