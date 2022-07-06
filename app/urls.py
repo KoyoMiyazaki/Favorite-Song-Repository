@@ -4,6 +4,7 @@ from .views import albums, artists, genres, songs
 urlpatterns = [
     path("songs/", songs.songs, name="songs"),
     path("songs/<int:song_id>", songs.single_song, name="single_song"),
+    path("songs/search/<str:search_word>", songs.search_songs, name="search_songs"),
     path("albums/", albums.albums, name="albums"),
     path("albums/<int:album_id>", albums.single_album, name="single_album"),
     path("artists/", artists.artists, name="artists"),

@@ -23,6 +23,7 @@ def songs(request):
             content = {
                 "status": "success",
                 "data": {"getAllSongs": serializer.data},
+                "numData": songs.count(),
                 "numPages": paginator.num_pages,
             }
             return Response(content, status=status.HTTP_200_OK)
@@ -156,3 +157,25 @@ def single_song(request, song_id):
             "status": "success",
         }
         return Response(content, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def search_songs(request, search_word):
+    try:
+        songs = Song.objects.filter(song_name__icontains=search_word).order_by(
+            "-updated_at", "song_name"
+        )
+
+        serializer = SongSerializer(songs, many=True)
+        content = {
+            "status": "success",
+            "data": {"searchSongs": serializer.data},
+            "numData": songs.count(),
+        }
+        return Response(content, status=status.HTTP_200_OK)
+    except Exception:
+        content = {
+            "status": "error",
+            "message": "Internal server error",
+        }
+        return Response(content, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
