@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import { Button, Stack, styled, TextField } from "@mui/material";
+import { Autocomplete, Button, Stack, styled, TextField } from "@mui/material";
 import axios, { AxiosError } from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToast } from "../slices/toastSlice";
+import {
+  addToAlbumHistory,
+  addToArtistHistory,
+  addToGenreHistory,
+} from "../slices/historySlice";
 
 const StyledTextField = styled(TextField)({
   width: "100%",
@@ -15,6 +20,9 @@ const RegisterSong = ({ getAllSongs }) => {
     artistName: "",
     genreName: "",
   });
+  const albumHistory = useSelector((state) => state.history.album);
+  const artistHistory = useSelector((state) => state.history.artist);
+  const genreHistory = useSelector((state) => state.history.genre);
   const dispatch = useDispatch();
 
   const handleInput = (e) => {
@@ -22,6 +30,16 @@ const RegisterSong = ({ getAllSongs }) => {
       return {
         ...prev,
         [e.target.name]: e.target.value,
+      };
+    });
+  };
+
+  const handleChange = (e, newValue) => {
+    const keyName = e.target.parentNode.getAttribute("name");
+    setInputValues((prev) => {
+      return {
+        ...prev,
+        [keyName]: newValue,
       };
     });
   };
@@ -44,6 +62,9 @@ const RegisterSong = ({ getAllSongs }) => {
           })
         );
       } else {
+        dispatch(addToAlbumHistory(inputValues.albumName));
+        dispatch(addToArtistHistory(inputValues.artistName));
+        dispatch(addToGenreHistory(inputValues.genreName));
         dispatch(
           setToast({
             message: "Registered!",
@@ -88,26 +109,47 @@ const RegisterSong = ({ getAllSongs }) => {
           onInput={handleInput}
           required
         />
-        <StyledTextField
-          label="Album Name"
-          variant="outlined"
-          name="albumName"
+        <Autocomplete
+          options={albumHistory}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Album Name"
+              name="albumName"
+              onInput={handleInput}
+            />
+          )}
           value={inputValues.albumName}
-          onInput={handleInput}
+          onChange={handleChange}
+          ListboxProps={{ name: "albumName" }}
         />
-        <StyledTextField
-          label="Artist Name"
-          variant="outlined"
-          name="artistName"
+        <Autocomplete
+          options={artistHistory}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Artist Name"
+              name="artistName"
+              onInput={handleInput}
+            />
+          )}
           value={inputValues.artistName}
-          onInput={handleInput}
+          onChange={handleChange}
+          ListboxProps={{ name: "artistName" }}
         />
-        <StyledTextField
-          label="Genre Name"
-          variant="outlined"
-          name="genreName"
+        <Autocomplete
+          options={genreHistory}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Genre Name"
+              name="genreName"
+              onInput={handleInput}
+            />
+          )}
           value={inputValues.genreName}
-          onInput={handleInput}
+          onChange={handleChange}
+          ListboxProps={{ name: "genreName" }}
         />
         <Button variant="contained" type="submit">
           Register

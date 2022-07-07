@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  Autocomplete,
   Button,
   IconButton,
   Stack,
@@ -13,6 +14,11 @@ import { ArrowBackIos } from "@mui/icons-material";
 import axios, { AxiosError } from "axios";
 import { setToast } from "../slices/toastSlice";
 import Title from "../components/Title";
+import {
+  addToAlbumHistory,
+  addToArtistHistory,
+  addToGenreHistory,
+} from "../slices/historySlice";
 
 const StyledTextField = styled(TextField)({
   width: "100%",
@@ -26,11 +32,14 @@ const SingleSong = () => {
     genreName: "",
   });
   const { songId } = useParams();
+  const albumHistory = useSelector((state) => state.history.album);
+  const artistHistory = useSelector((state) => state.history.artist);
+  const genreHistory = useSelector((state) => state.history.genre);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getSingSong = async (songId) => {
+    const getSingleSong = async (songId) => {
       try {
         const res = await axios.get(`http://localhost:8000/songs/${songId}`);
         const data = await res.data;
@@ -52,7 +61,7 @@ const SingleSong = () => {
         }
       }
     };
-    getSingSong(songId);
+    getSingleSong(songId);
   }, []);
 
   const handleInput = (e) => {
@@ -60,6 +69,16 @@ const SingleSong = () => {
       return {
         ...prev,
         [e.target.name]: e.target.value,
+      };
+    });
+  };
+
+  const handleChange = (e, newValue) => {
+    const keyName = e.target.parentNode.getAttribute("name");
+    setInputValues((prev) => {
+      return {
+        ...prev,
+        [keyName]: newValue,
       };
     });
   };
@@ -73,6 +92,9 @@ const SingleSong = () => {
         artist_name: inputValues.artistName,
         genre_name: inputValues.genreName,
       });
+      dispatch(addToAlbumHistory(inputValues.albumName));
+      dispatch(addToArtistHistory(inputValues.artistName));
+      dispatch(addToGenreHistory(inputValues.genreName));
       dispatch(
         setToast({
           message: "Updated!",
@@ -129,35 +151,47 @@ const SingleSong = () => {
             onInput={handleInput}
             required
           />
-          <StyledTextField
-            label="Album Name"
-            variant="outlined"
-            name="albumName"
+          <Autocomplete
+            options={albumHistory}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Album Name"
+                name="albumName"
+                onInput={handleInput}
+              />
+            )}
             value={inputValues.albumName}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onInput={handleInput}
+            onChange={handleChange}
+            ListboxProps={{ name: "albumName" }}
           />
-          <StyledTextField
-            label="Artist Name"
-            variant="outlined"
-            name="artistName"
+          <Autocomplete
+            options={artistHistory}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Artist Name"
+                name="artistName"
+                onInput={handleInput}
+              />
+            )}
             value={inputValues.artistName}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onInput={handleInput}
+            onChange={handleChange}
+            ListboxProps={{ name: "artistName" }}
           />
-          <StyledTextField
-            label="Genre Name"
-            variant="outlined"
-            name="genreName"
+          <Autocomplete
+            options={genreHistory}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Genre Name"
+                name="genreName"
+                onInput={handleInput}
+              />
+            )}
             value={inputValues.genreName}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onInput={handleInput}
+            onChange={handleChange}
+            ListboxProps={{ name: "genreName" }}
           />
           <Button variant="contained" type="submit">
             Update
