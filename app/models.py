@@ -41,8 +41,12 @@ class Artist(models.Model):
 class Album(models.Model):
     album_id = models.AutoField(primary_key=True)
     album_name = models.CharField(max_length=255, null=False, blank=False)
-    artist_id = models.ForeignKey(
-        Artist, on_delete=models.DO_NOTHING, null=False, db_column="artist_id"
+    artist = models.ForeignKey(
+        Artist,
+        on_delete=models.DO_NOTHING,
+        null=False,
+        db_column="artist_id",
+        to_field="artist_id",
     )
 
     class Meta:
@@ -65,11 +69,19 @@ class Song(models.Model):
         null=False,
         blank=False,
     )
-    album_id = models.ForeignKey(
-        Album, on_delete=models.DO_NOTHING, null=True, db_column="album_id"
+    album = models.ForeignKey(
+        Album,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        db_column="album_id",
+        to_field="album_id",
     )
-    genre_id = models.ForeignKey(
-        Genre, on_delete=models.DO_NOTHING, null=True, db_column="genre_id"
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        db_column="genre_id",
+        to_field="genre_id",
     )
     updated_at = models.DateTimeField(auto_now=True)
 
