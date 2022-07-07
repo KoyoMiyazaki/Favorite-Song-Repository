@@ -12,7 +12,7 @@ from ..serializers import SongSerializer
 def songs(request):
     if request.method == "GET":
         try:
-            songs = Song.objects.select_related("album_id", "genre_id").order_by(
+            songs = Song.objects.select_related("album", "genre").order_by(
                 "-updated_at", "song_name"
             )
             paginator = Paginator(songs, 5)
@@ -51,11 +51,9 @@ def songs(request):
             genre, created = Genre.objects.get_or_create(genre_name=genre_name)
             artist, created = Artist.objects.get_or_create(artist_name=artist_name)
             album, created = Album.objects.get_or_create(
-                album_name=album_name, artist_id=artist
+                album_name=album_name, artist=artist
             )
-            song = Song.objects.create(
-                song_name=song_name, album_id=album, genre_id=genre
-            )
+            song = Song.objects.create(song_name=song_name, album=album, genre=genre)
 
             serializer = SongSerializer(song, many=False)
             content = {
@@ -119,11 +117,11 @@ def single_song(request, song_id):
             genre, created = Genre.objects.get_or_create(genre_name=genre_name)
             artist, created = Artist.objects.get_or_create(artist_name=artist_name)
             album, created = Album.objects.get_or_create(
-                album_name=album_name, artist_id=artist
+                album_name=album_name, artist=artist
             )
             song.song_name = song_name
-            song.genre_id = genre
-            song.album_id = album
+            song.genre = genre
+            song.album = album
             song.save()
 
             serializer = SongSerializer(song, many=False)
