@@ -7,6 +7,7 @@ models.CharField.register_lookup(Length)
 class Genre(models.Model):
     genre_id = models.AutoField(primary_key=True)
     genre_name = models.CharField(max_length=255, null=False, blank=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "genre"
@@ -24,6 +25,7 @@ class Genre(models.Model):
 class Artist(models.Model):
     artist_id = models.AutoField(primary_key=True)
     artist_name = models.CharField(max_length=255, null=False, blank=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "artist"
@@ -48,6 +50,7 @@ class Album(models.Model):
         db_column="artist_id",
         to_field="artist_id",
     )
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = "album"
