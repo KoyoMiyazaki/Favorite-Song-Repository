@@ -111,3 +111,23 @@ def single_artist(request, artist_id):
             "status": "success",
         }
         return Response(content, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def latest_artists(request):
+    try:
+        limit = int(request.GET.get("limit", 5))
+        artists = Artist.objects.all().order_by("-updated_at")[:limit]
+        serializer = ArtistSerializer(artists, many=True)
+        content = {
+            "status": "success",
+            "data": {"getLatestArtists": serializer.data},
+        }
+        return Response(content, status=status.HTTP_200_OK)
+
+    except Exception:
+        content = {
+            "status": "error",
+            "message": "Internal server error",
+        }
+        return Response(content, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

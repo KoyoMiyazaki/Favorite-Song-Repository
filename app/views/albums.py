@@ -119,3 +119,23 @@ def single_album(request, album_id):
             "status": "success",
         }
         return Response(content, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def latest_albums(request):
+    try:
+        limit = int(request.GET.get("limit", 5))
+        albums = Album.objects.all().order_by("-updated_at")[:limit]
+        serializer = AlbumSerializer(albums, many=True)
+        content = {
+            "status": "success",
+            "data": {"getLatestAlbums": serializer.data},
+        }
+        return Response(content, status=status.HTTP_200_OK)
+
+    except Exception:
+        content = {
+            "status": "error",
+            "message": "Internal server error",
+        }
+        return Response(content, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

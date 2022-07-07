@@ -111,3 +111,23 @@ def single_genre(request, genre_id):
             "status": "success",
         }
         return Response(content, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def latest_genres(request):
+    try:
+        limit = int(request.GET.get("limit", 5))
+        genres = Genre.objects.all().order_by("-updated_at")[:limit]
+        serializer = GenreSerializer(genres, many=True)
+        content = {
+            "status": "success",
+            "data": {"getLatestGenres": serializer.data},
+        }
+        return Response(content, status=status.HTTP_200_OK)
+
+    except Exception:
+        content = {
+            "status": "error",
+            "message": "Internal server error",
+        }
+        return Response(content, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
