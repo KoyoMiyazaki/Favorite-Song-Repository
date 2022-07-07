@@ -9,8 +9,8 @@ class GetSingleSongViewTest(TestCase):
     def setUpTestData(cls):
         cls.song = Song.objects.create(
             song_name="song",
-            album_id=None,
-            genre_id=None,
+            album=None,
+            genre=None,
         )
 
     def test_get_single_song_by_url(self):
@@ -33,20 +33,20 @@ class PutSingleSongViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         album1 = Album.objects.create(
-            album_name="album1", artist_id=Artist.objects.create(artist_name="artist1")
+            album_name="album1", artist=Artist.objects.create(artist_name="artist1")
         )
         album2 = Album.objects.create(
-            album_name="album2", artist_id=Artist.objects.create(artist_name="artist2")
+            album_name="album2", artist=Artist.objects.create(artist_name="artist2")
         )
         cls.song1 = Song.objects.create(
             song_name="song1",
-            album_id=album1,
-            genre_id=Genre.objects.create(genre_name="genre1"),
+            album=album1,
+            genre=Genre.objects.create(genre_name="genre1"),
         )
         cls.song2 = Song.objects.create(
             song_name="song2",
-            album_id=album2,
-            genre_id=Genre.objects.create(genre_name="genre2"),
+            album=album2,
+            genre=Genre.objects.create(genre_name="genre2"),
         )
 
     def test_update_single_song(self):
@@ -102,8 +102,8 @@ class DeleteSingleSongViewTest(TestCase):
     def setUpTestData(cls):
         cls.song = Song.objects.create(
             song_name="song",
-            album_id=None,
-            genre_id=None,
+            album=None,
+            genre=None,
         )
 
     def test_delete_single_song(self):

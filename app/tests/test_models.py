@@ -32,18 +32,18 @@ class SongModelTest(TestCase):
     def test_create_different_songs(self):
         """異なるsongオブジェクトが作成できることをテスト"""
         album1 = Album.objects.create(
-            album_name="album1", artist_id=Artist.objects.create(artist_name="artist1")
+            album_name="album1", artist=Artist.objects.create(artist_name="artist1")
         )
         album2 = Album.objects.create(
-            album_name="album2", artist_id=Artist.objects.create(artist_name="artist2")
+            album_name="album2", artist=Artist.objects.create(artist_name="artist2")
         )
         Song.objects.create(
             song_name="song1",
-            album_id=album1,
+            album=album1,
         )
         Song.objects.create(
             song_name="song2",
-            album_id=album2,
+            album=album2,
         )
         saved_songs = Song.objects.all()
         self.assertEqual(saved_songs.count(), 2)
@@ -51,40 +51,40 @@ class SongModelTest(TestCase):
     def test_create_same_songs(self):
         """同一songオブジェクトが作成できないことをテスト"""
         album1 = Album.objects.create(
-            album_name="album1", artist_id=Artist.objects.create(artist_name="artist1")
+            album_name="album1", artist=Artist.objects.create(artist_name="artist1")
         )
         with self.assertRaises(IntegrityError):
             for i in range(2):
                 Song.objects.create(
                     song_name="test",
-                    album_id=album1,
+                    album=album1,
                 )
 
 
 class AlbumModelTest(TestCase):
-    def test_create_with_album_name_and_artist_id(self):
-        """album_name, artist_id 有りでalbumが作成できるかテスト"""
+    def test_create_with_album_name_and_artist(self):
+        """album_name, artist 有りでalbumが作成できるかテスト"""
         Album.objects.create(
             album_name="album",
-            artist_id=Artist.objects.create(artist_name="artist"),
+            artist=Artist.objects.create(artist_name="artist"),
         )
         saved_albums = Album.objects.all()
         self.assertEqual(saved_albums.count(), 1)
 
-    def test_create_with_null_album_name_and_any_artist_id(self):
-        """album_name がNone(null)で、artist_id が指定されている場合、albumが作成できないことをテスト"""
+    def test_create_with_null_album_name_and_any_artist(self):
+        """album_name がNone(null)で、artist が指定されている場合、albumが作成できないことをテスト"""
         with self.assertRaises(IntegrityError):
             Album.objects.create(
                 album_name=None,
-                artist_id=Artist.objects.create(artist_name="artist"),
+                artist=Artist.objects.create(artist_name="artist"),
             )
 
-    def test_create_with_any_album_name_and_null_artist_id(self):
-        """album_name が指定されており、artist_id がNone(null)の場合、albumが作成できないことをテスト"""
+    def test_create_with_any_album_name_and_null_artist(self):
+        """album_name が指定されており、artist がNone(null)の場合、albumが作成できないことをテスト"""
         with self.assertRaises(IntegrityError):
             Album.objects.create(
                 album_name="album",
-                artist_id=None,
+                artist=None,
             )
 
     def test_create_with_album_name_contains_many_letters(self):
@@ -97,10 +97,10 @@ class AlbumModelTest(TestCase):
     def test_create_different_albums(self):
         """異なるalbumオブジェクトが作成できることをテスト"""
         Album.objects.create(
-            album_name="album1", artist_id=Artist.objects.create(artist_name="artist1")
+            album_name="album1", artist=Artist.objects.create(artist_name="artist1")
         )
         Album.objects.create(
-            album_name="album2", artist_id=Artist.objects.create(artist_name="artist2")
+            album_name="album2", artist=Artist.objects.create(artist_name="artist2")
         )
 
         saved_albums = Album.objects.all()
@@ -112,7 +112,7 @@ class AlbumModelTest(TestCase):
             for i in range(2):
                 Album.objects.create(
                     album_name="album1",
-                    artist_id=Artist.objects.create(artist_name="artist1"),
+                    artist=Artist.objects.create(artist_name="artist1"),
                 )
 
 

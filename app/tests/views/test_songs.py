@@ -13,8 +13,8 @@ class GetSongsViewTest(TestCase):
         for i in range(cls.number_of_all_songs):
             Song.objects.create(
                 song_name=f"song {i}",
-                album_id=None,
-                genre_id=None,
+                album=None,
+                genre=None,
             )
 
     def test_get_all_songs_by_url(self):
