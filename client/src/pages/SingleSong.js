@@ -34,12 +34,12 @@ const SingleSong = () => {
       try {
         const res = await axios.get(`http://localhost:8000/songs/${songId}`);
         const data = await res.data;
-        const { song_name, album_id, genre_id } = await data.data.getSingleSong;
+        const { song_name, album, genre } = await data.data.getSingleSong;
         setInputValues({
           songName: song_name,
-          albumName: album_id.album_name,
-          artistName: album_id.artist_id.artist_name,
-          genreName: genre_id.genre_name,
+          albumName: album.album_name,
+          artistName: album.artist.artist_name,
+          genreName: genre.genre_name,
         });
       } catch (e) {
         if (e instanceof AxiosError) {
