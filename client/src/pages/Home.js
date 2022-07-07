@@ -11,6 +11,7 @@ import {
   Pagination,
   Paper,
   Stack,
+  Typography,
 } from "@mui/material";
 import { ExpandMore, Search } from "@mui/icons-material";
 import axios, { AxiosError } from "axios";
@@ -23,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [songs, setSongs] = useState([]);
   const [page, setPage] = useState(1);
+  const [numData, setNumData] = useState(0);
   const [numPages, setNumPages] = useState(0);
   const [searchWord, setSearchWord] = useState("");
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const Home = () => {
     try {
       const res = await axios.get(`http://localhost:8000/songs?page=${page}`);
       const data = await res.data;
+      setNumData(parseInt(data.numData, 10));
       setNumPages(parseInt(data.numPages, 10));
       setSongs(data.data.getAllSongs);
     } catch (e) {
@@ -130,17 +133,34 @@ const Home = () => {
             </Paper>
           </Stack>
         </Stack>
-        <SongList songs={songs} getAllSongs={() => getAllSongs()} />
-        <Box
-          sx={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}
-        >
-          <Pagination
-            count={numPages}
-            page={page}
-            onChange={handlePageChange}
-            size="large"
-          />
-        </Box>
+        {numData === 0 ? (
+          <Typography
+            variant="h5"
+            component="p"
+            textAlign="center"
+            marginTop={10}
+          >
+            There is no songs. Let's register a song!
+          </Typography>
+        ) : (
+          <>
+            <SongList songs={songs} getAllSongs={() => getAllSongs()} />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "1rem",
+              }}
+            >
+              <Pagination
+                count={numPages}
+                page={page}
+                onChange={handlePageChange}
+                size="large"
+              />
+            </Box>
+          </>
+        )}
       </Grid>
     </Grid>
   );
