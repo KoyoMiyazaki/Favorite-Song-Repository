@@ -86,6 +86,7 @@ const RegisterSong = ({ getAllSongs }) => {
           name="songName"
           value={inputValues.songName}
           onInput={handleInput}
+          required
         />
         <StyledTextField
           label="Album Name"

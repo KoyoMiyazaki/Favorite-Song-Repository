@@ -74,8 +74,6 @@ const Home = () => {
     }
   };
 
-  console.log(searchWord);
-
   return (
     <Grid
       container
@@ -124,6 +122,7 @@ const Home = () => {
                 name="q"
                 value={searchWord}
                 onInput={handleSearchWordInput}
+                required
               />
               <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
                 <Search />

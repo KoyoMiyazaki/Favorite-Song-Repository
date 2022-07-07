@@ -127,6 +127,7 @@ const SingleSong = () => {
               shrink: true,
             }}
             onInput={handleInput}
+            required
           />
           <StyledTextField
             label="Album Name"
