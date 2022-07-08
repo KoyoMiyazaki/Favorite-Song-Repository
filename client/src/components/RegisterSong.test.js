@@ -36,8 +36,7 @@ describe("RegisterSong Component", () => {
       expect(elem.name).toMatch(new RegExp(nameProperty, "i"));
     });
 
-    const buttonElement = await screen.findByRole("button");
+    const buttonElement = await screen.findByText(/^REGISTER$/i);
     expect(buttonElement).toBeInTheDocument();
-    expect(buttonElement.textContent).toMatch(/REGISTER/i);
   });
 });

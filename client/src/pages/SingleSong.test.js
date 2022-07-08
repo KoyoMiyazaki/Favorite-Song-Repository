@@ -37,9 +37,8 @@ describe("SingleSong Component", () => {
       expect(elem.name).toMatch(new RegExp(nameProperty, "i"));
     });
 
-    const buttonElement = await screen.findByRole("button");
+    const buttonElement = await screen.findByText(/^UPDATE$/i);
     expect(buttonElement).toBeInTheDocument();
-    expect(buttonElement.textContent).toMatch(/UPDATE/i);
 
     const backLinkElement = await screen.findByRole("link");
     expect(backLinkElement).toBeInTheDocument();
